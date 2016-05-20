@@ -11,16 +11,16 @@ public class Day {
     /**
      * Min and max temperatures of the day.
      */
-    public int minTemp;
-    public int maxTemp;
+    public double minTemp;
+    public double maxTemp;
 
     /**
      * Temperatures at specific times of the day.
      */
-    public int dayTemp;
-    public int eveTemp;
-    public int mornTemp;
-    public int nightTemp;
+    public double dayTemp;
+    public double eveTemp;
+    public double mornTemp;
+    public double nightTemp;
 
     /**
      * A description of the day: i.e "broken clouds"
@@ -37,6 +37,25 @@ public class Day {
     /**
      * Pressure in hectopascals.
      */
-    public float pressure;
+    public double pressure;
+    /**
+     * An icon to display to the user depending on the weather.
+     */
+    public String icon;
 
+    public String toString() {
+        return "{\n" +
+                "minTemp: " + minTemp + ",\n" +
+                "maxTemp: " + maxTemp + ",\n" +
+                "dayTemp: " + dayTemp + ",\n" +
+                "eveTemp: " + eveTemp + ",\n" +
+                "mornTemp: " + mornTemp + ",\n" +
+                "nightTemp: " + nightTemp + ",\n" +
+                "description: " + description + ",\n" +
+                "main: " + main + ",\n" +
+                "humidity: " + humidity + ",\n" +
+                "pressure: " + pressure + ",\n" +
+                "icon: " + icon + "\n" +
+                "}";
+    }
 }
