@@ -2,6 +2,8 @@
     <string name="app_name">Weather++</string>
     <string name="title_activity_settings">Weather++ Settings</string>
 
+    <string name="action_refresh">Refresh</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
