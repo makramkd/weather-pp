@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
 import me.makram.weatherpp.app.AppController;
+import me.makram.weatherpp.app.BuildConfig;
 import me.makram.weatherpp.app.R;
 import me.makram.weatherpp.app.tasks.GetForecastByCoordinatesTask;
 import okhttp3.OkHttpClient;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         GoogleApiClient.OnConnectionFailedListener{
 
     private static final String TAG = MainActivity.class.getName();
+    private static final int PERMISSION_LOCATION = 1;
 
     private GoogleApiClient googleApiClient;
     private OkHttpClient okHttpClient;
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        // TODO: save location in the bundle
         super.onSaveInstanceState(outState);
     }
 
@@ -73,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         switch (id) {
             case R.id.action_refresh:
-                if (lastLocation != null) {
+                if (lastLocation != null && networkIsAvailable()) {
                     new GetForecastByCoordinatesTask(okHttpClient).execute(lastLocation.getLongitude(),
                             lastLocation.getLatitude());
                 }
@@ -92,7 +96,22 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-
+        switch (requestCode) {
+            case PERMISSION_LOCATION:
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    int locationPermission =
+                            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+                    if (BuildConfig.DEBUG) {
+                        Log.d(TAG, "Location permission granted: " + (locationPermission ==
+                        PackageManager.PERMISSION_GRANTED));
+                    }
+                    lastLocation =
+                            LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+                }
+            default:
+                break;
+        }
     }
 
     /**
@@ -115,9 +134,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
         if (locationPermission == PackageManager.PERMISSION_GRANTED) {
             lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-            if (lastLocation != null) {
-
+            if (lastLocation == null) {
+                Log.d(TAG, "lastLocation is null");
             }
+        } else {
+            // need to request permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{ Manifest.permission.ACCESS_COARSE_LOCATION },
+                    PERMISSION_LOCATION);
         }
     }
 

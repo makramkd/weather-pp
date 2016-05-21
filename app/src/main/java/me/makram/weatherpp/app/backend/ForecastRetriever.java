@@ -25,7 +25,7 @@ public class ForecastRetriever {
      * Constants needed for URI information.
      */
     public static final Uri FORECAST_API_URL =
-            Uri.parse("http://www.api.openweathermap.org/data/2.5/forecast/daily");
+            Uri.parse("http://api.openweathermap.org/data/2.5/forecast/daily");
 
 
     /**
