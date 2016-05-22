@@ -14,17 +14,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.makram.weatherpp.app.AppController;
 import me.makram.weatherpp.app.BuildConfig;
+import me.makram.weatherpp.app.DayForecastClickedListener;
 import me.makram.weatherpp.app.R;
+import me.makram.weatherpp.app.WeatherAdapter;
 import me.makram.weatherpp.app.backend.Day;
 import me.makram.weatherpp.app.tasks.GetForecastByCoordinatesTask;
 import okhttp3.OkHttpClient;
@@ -39,6 +43,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private OkHttpClient okHttpClient;
     private Location lastLocation;
 
+    private WeatherAdapter weatherAdapter;
+    private ListView listView;
+    private DayForecastClickedListener listener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +56,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         AppController application = (AppController) getApplication();
         okHttpClient = application.getClient();
 
+        // initially empty weather adapter.
+        weatherAdapter = new WeatherAdapter(this, R.layout.forecast_item, new ArrayList<Day>(),
+                application.getImageLoader());
+        listener = new DayForecastClickedListener(weatherAdapter, this);
+        listView = (ListView) findViewById(R.id.listView);
+        // set the adapter
+        if (listView != null) {
+            listView.setAdapter(weatherAdapter);
+            listView.setOnItemClickListener(listener);
+        }
     }
 
     @Override
@@ -67,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     protected void onPause() {
         super.onPause();
+        // TODO: save current forecast list in the bundle/preferences
     }
 
     @Override

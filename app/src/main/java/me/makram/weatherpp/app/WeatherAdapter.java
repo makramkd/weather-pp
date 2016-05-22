@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import me.makram.weatherpp.app.backend.Day;
 
@@ -118,5 +116,14 @@ public class WeatherAdapter extends BaseAdapter{
             default:
                 return format.format(dateTime.plusDays(position));
         }
+    }
+
+    /**
+     * Use this to update the forecast.
+     * @param days the new forecast
+     */
+    public void setDays(List<Day> days) {
+        this.days = days;
+        notifyDataSetChanged();
     }
 }
