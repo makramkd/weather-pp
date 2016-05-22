@@ -6,6 +6,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.List;
 
+import me.makram.weatherpp.app.activities.MainActivity;
 import me.makram.weatherpp.app.backend.Day;
 import me.makram.weatherpp.app.backend.ForecastRetriever;
 import okhttp3.OkHttpClient;
@@ -18,9 +19,11 @@ public class GetForecastByCoordinatesTask extends AsyncTask<Double, Void, List<D
     private static final String TAG = GetForecastByCoordinatesTask.class.getName();
 
     private OkHttpClient client;
+    private MainActivity mainActivity;
 
-    public GetForecastByCoordinatesTask(OkHttpClient client) {
-        this.client = client;
+    public GetForecastByCoordinatesTask(MainActivity activity) {
+        this.client = activity.getOkHttpClient();
+        this.mainActivity = activity;
     }
 
     @Override
@@ -38,9 +41,7 @@ public class GetForecastByCoordinatesTask extends AsyncTask<Double, Void, List<D
     @Override
     protected void onPostExecute(List<Day> days) {
         if (days != null) {
-            for (Day day : days) {
-                Log.d(TAG, day.toString());
-            }
+            mainActivity.populateForecastList(days);
         } else {
             Log.d(TAG, "Days is null");
         }

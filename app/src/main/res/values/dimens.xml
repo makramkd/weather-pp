@@ -2,4 +2,10 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    
+    <!-- dimensions for the custom list item -->
+    <dimen name="title">17sp</dimen>
+    <dimen name="city">15sp</dimen>
+    <dimen name="description">13sp</dimen>
+    <dimen name="date">12sp</dimen>
 </resources>

@@ -14,14 +14,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.List;
+
 import me.makram.weatherpp.app.AppController;
 import me.makram.weatherpp.app.BuildConfig;
 import me.makram.weatherpp.app.R;
+import me.makram.weatherpp.app.backend.Day;
 import me.makram.weatherpp.app.tasks.GetForecastByCoordinatesTask;
 import okhttp3.OkHttpClient;
 
@@ -67,8 +71,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        // TODO: save location in the bundle
         super.onSaveInstanceState(outState);
+        if (lastLocation != null) {
+            outState.putDouble("longitude", lastLocation.getLongitude());
+            outState.putDouble("latitude", lastLocation.getLatitude());
+        }
+    }
+
+    protected void onRestoreInstanceState(Bundle bundle) {
+        // TODO: check if we cannot get proper location in order
+        // to use previous location in bundle.
     }
 
     @Override
@@ -77,9 +89,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         switch (id) {
             case R.id.action_refresh:
-                if (lastLocation != null && networkIsAvailable()) {
-                    new GetForecastByCoordinatesTask(okHttpClient).execute(lastLocation.getLongitude(),
-                            lastLocation.getLatitude());
+                if (networkIsAvailable()) {
+                    if (lastLocation != null) {
+                        new GetForecastByCoordinatesTask(this).execute(lastLocation.getLongitude(),
+                                lastLocation.getLatitude());
+                    }
+                } else {
+                    Toast.makeText(this, "Not connected to the internet!", Toast.LENGTH_SHORT)
+                            .show();
                 }
                 return true;
             default:
@@ -162,5 +179,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+    }
+
+    public OkHttpClient getOkHttpClient() {
+        return okHttpClient;
+    }
+
+    /**
+     * Populate the ListView in the activity with the given forecasts.
+     * @param days
+     */
+    public void populateForecastList(List<Day> days) {
+
     }
 }

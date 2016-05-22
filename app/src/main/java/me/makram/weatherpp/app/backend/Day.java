@@ -42,6 +42,18 @@ public class Day {
      * An icon to display to the user depending on the weather.
      */
     public String icon;
+    /**
+     * The city name.
+     */
+    public String cityName;
+    /**
+     * The country name.
+     */
+    public String countryName;
+    /**
+     * Internal id used by openweathermap, may be useful in the future.
+     */
+    public int locationId;
 
     public String toString() {
         return "{\n" +
@@ -55,7 +67,8 @@ public class Day {
                 "main: " + main + ",\n" +
                 "humidity: " + humidity + ",\n" +
                 "pressure: " + pressure + ",\n" +
-                "icon: " + icon + "\n" +
+                "icon: " + icon + ",\n" +
+                "city: " + cityName + "\n" +
                 "}";
     }
 }

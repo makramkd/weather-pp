@@ -4,6 +4,9 @@
 
     <string name="action_refresh">Refresh</string>
 
+    <string name="temperature_textview">%d/%d</string>
+    <string name="city_textview">%s, %s</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
@@ -61,4 +64,5 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="weather_icon_description">An icon that displays what kind of weather we have on this day.</string>
 </resources>

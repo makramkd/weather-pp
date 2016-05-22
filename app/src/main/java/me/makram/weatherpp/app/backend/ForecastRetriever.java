@@ -63,10 +63,10 @@ public class ForecastRetriever {
     private static List<Day> processJson(String string) {
         List<Day> forecast = new ArrayList<>();
         try {
-            JSONObject object = new JSONObject(string);
-            JSONArray listArray = object.getJSONArray("list");
+            JSONObject topmostObject = new JSONObject(string);
+            JSONArray listArray = topmostObject.getJSONArray("list");
             for (int i = 0; i < listArray.length(); ++i) {
-                forecast.add(createDayObject(listArray, i));
+                forecast.add(createDayObject(topmostObject, listArray, i));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -83,11 +83,12 @@ public class ForecastRetriever {
      * @return the Day object corresponding to the given index.
      * @throws JSONException
      */
-    private static Day createDayObject(JSONArray listArray, int i) throws JSONException {
+    private static Day createDayObject(JSONObject topmostObject, JSONArray listArray, int i) throws JSONException {
         JSONObject o = listArray.getJSONObject(i);
         JSONObject tempObject = o.getJSONObject("temp");
         JSONArray weatherArray = o.getJSONArray("weather");
         JSONObject weatherObject = weatherArray.getJSONObject(0);
+        JSONObject cityObject = topmostObject.getJSONObject("city");
         Day day = new Day();
         day.dayTemp = tempObject.getDouble("day");
         day.nightTemp = tempObject.getDouble("night");
@@ -100,6 +101,8 @@ public class ForecastRetriever {
         day.description = weatherObject.getString("description");
         day.pressure = o.getDouble("pressure");
         day.humidity = o.getInt("humidity");
+        day.cityName = cityObject.getString("name");
+        day.countryName = cityObject.getString("country");
 
         return day;
     }
