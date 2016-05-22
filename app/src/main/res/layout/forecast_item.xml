@@ -4,7 +4,7 @@
     android:padding="8dip">
 
     <!-- Image of the forecast -->
-    <ImageView
+    <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/weather_icon_imageview"
         android:contentDescription="@string/weather_icon_description"
         android:layout_alignParentLeft="true"

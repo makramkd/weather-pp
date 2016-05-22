@@ -4,8 +4,8 @@
 
     <string name="action_refresh">Refresh</string>
 
-    <string name="temperature_textview">%d/%d</string>
-    <string name="city_textview">%s, %s</string>
+    <string name="temperature_textview">%1$d/%2$d</string>
+    <string name="city_textview">%1$s, %2$s</string>
 
     <!-- Strings related to Settings -->
 

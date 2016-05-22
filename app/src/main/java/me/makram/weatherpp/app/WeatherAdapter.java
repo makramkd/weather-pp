@@ -9,9 +9,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+
+import org.joda.time.DateTime;
+
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import me.makram.weatherpp.app.backend.Day;
 
@@ -27,16 +35,17 @@ public class WeatherAdapter extends BaseAdapter{
     private Context context;
     private List<Day> days;
     private LayoutInflater layoutInflater;
+    private ImageLoader imageLoader;
 
     private class ViewHolder {
-        ImageView forecastImageView;
+        NetworkImageView forecastImageView;
         TextView temperatureTextView;
         TextView cityTextView;
         TextView descriptionTextView;
         TextView dateTextView;
     }
 
-    public WeatherAdapter(Context context, int itemLayoutId, Collection<Day> days) {
+    public WeatherAdapter(Context context, int itemLayoutId, Collection<Day> days, ImageLoader loader) {
         Log.d(TAG, "Constructing weather adapter");
 
         this.context = context;
@@ -44,6 +53,7 @@ public class WeatherAdapter extends BaseAdapter{
         this.days = new ArrayList<>();
         this.days.addAll(days);
         layoutInflater = LayoutInflater.from(context);
+        imageLoader = loader;
 
         Log.d(TAG, "Finished constructing weather adapter");
     }
@@ -73,7 +83,7 @@ public class WeatherAdapter extends BaseAdapter{
         if (convertView == null) {
             convertView = layoutInflater.inflate(itemLayoutId, null);
             holder = new ViewHolder();
-            holder.forecastImageView = (ImageView) convertView.findViewById(R.id.weather_icon_imageview);
+            holder.forecastImageView = (NetworkImageView) convertView.findViewById(R.id.weather_icon_imageview);
             holder.cityTextView = (TextView) convertView.findViewById(R.id.location_textview);
             holder.temperatureTextView = (TextView) convertView.findViewById(R.id.temperature_textview);
             holder.descriptionTextView = (TextView) convertView.findViewById(R.id.description_textview);
@@ -90,8 +100,23 @@ public class WeatherAdapter extends BaseAdapter{
                 (int) day.minTemp, (int) day.maxTemp));
         holder.cityTextView.setText(context.getResources().getString(R.string.city_textview,
                 day.cityName, day.countryName));
-
+        holder.forecastImageView.setImageUrl(day.getImageUrl(), imageLoader);
+        holder.dateTextView.setText(dateRelativeToPosition(position));
 
         return convertView;
+    }
+
+    private String dateRelativeToPosition(int position) {
+        DateFormat format = DateFormat.getDateInstance();
+        Date date = new Date();
+        DateTime dateTime = new DateTime(date);
+        switch (position) {
+            case 0:
+                return "Today, " + format.format(date);
+            case 1:
+                return "Tomorrow, " + format.format(dateTime.plusDays(1));
+            default:
+                return format.format(dateTime.plusDays(position));
+        }
     }
 }

@@ -8,6 +8,8 @@ package me.makram.weatherpp.app.backend;
  */
 public class Day {
 
+    private static final String IMAGE_URL = "http://openweathermap.org/img/w/";
+
     /**
      * Min and max temperatures of the day.
      */
@@ -70,5 +72,9 @@ public class Day {
                 "icon: " + icon + ",\n" +
                 "city: " + cityName + "\n" +
                 "}";
+    }
+
+    public String getImageUrl() {
+        return IMAGE_URL + icon;
     }
 }
