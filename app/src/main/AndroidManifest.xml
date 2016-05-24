@@ -23,7 +23,7 @@
         <activity android:name=".activities.DayActivity" />
         <activity
             android:parentActivityName=".activities.MainActivity"
-            android:name=".activities.SettingsActivity"
+            android:name=".activities.SinglePageSettingsActivity"
             android:label="@string/title_activity_settings">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

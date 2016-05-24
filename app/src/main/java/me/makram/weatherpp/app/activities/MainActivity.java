@@ -7,6 +7,7 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -74,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setOnRefreshListener(this);
         }
+
+        // do preference stuff
+        PreferenceManager.setDefaultValues(this, R.xml.preferences_all, false);
     }
 
     @Override

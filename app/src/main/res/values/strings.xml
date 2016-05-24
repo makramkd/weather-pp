@@ -47,7 +47,7 @@
     <string name="pref_temperature_units">Temperature Units</string>
     <string name="pref_temperature_display_summary">Choose between Kelvin, Celsius, and Fahrenheit</string>
     <string name="pref_days_in_forecast">Days in Forecast</string>
-    <string name="pref_set_days_in_forecast">Set the amount of days in forecast</string>
+    <string name="pref_set_days_in_forecast">Set the amount of days in the forecast:</string>
 
     <!-- Example settings for Data & Sync -->
     <string name="pref_header_data_sync">Data &amp; sync</string>
