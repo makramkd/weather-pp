@@ -1,15 +1,15 @@
 package me.makram.weatherpp.app.activities;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import me.makram.weatherpp.app.PreferenceConstants;
 import me.makram.weatherpp.app.R;
 
 /**
@@ -23,6 +23,10 @@ public class SinglePageSettingsActivity extends AppCompatPreferenceActivity {
             new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    if (newValue == null) {
+                        return false;
+                    }
+
                     String stringValue = newValue.toString();
 
                     if (preference instanceof ListPreference) {
@@ -31,6 +35,9 @@ public class SinglePageSettingsActivity extends AppCompatPreferenceActivity {
 
                         preference.setSummary(index >= 0 ? listPreference.getEntries()[index] :
                         null);
+
+                        // TODO : notify the adapter that the setting has changed so that
+                        // we can update the UI
                     } else if (preference instanceof EditTextPreference) {
                         EditTextPreference editTextPreference = (EditTextPreference) preference;
                         // get the number that the user gave, and make sure
@@ -60,6 +67,9 @@ public class SinglePageSettingsActivity extends AppCompatPreferenceActivity {
         if (bar != null) {
             bar.setDisplayHomeAsUpEnabled(true);
         }
+
+        bindPreferenceSummaryToValue(findPreference(PreferenceConstants.PREF_TEMPERATURE_DISPLAY_TYPE));
+        bindPreferenceSummaryToValue(findPreference(PreferenceConstants.PREF_DAYS_IN_FORECAST));
     }
 
     @Override
@@ -75,5 +85,15 @@ public class SinglePageSettingsActivity extends AppCompatPreferenceActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private static void bindPreferenceSummaryToValue(Preference preference) {
+        preference.setOnPreferenceChangeListener(listener);
+
+        // Trigger the listener immediately with the preference's
+        // current value.
+        listener.onPreferenceChange(preference,
+                PreferenceManager.getDefaultSharedPreferences(preference.getContext())
+        .getString(preference.getKey(), null));
     }
 }

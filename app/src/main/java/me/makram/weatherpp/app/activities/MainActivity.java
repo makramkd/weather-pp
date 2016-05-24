@@ -2,6 +2,7 @@ package me.makram.weatherpp.app.activities;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
@@ -39,13 +40,16 @@ import okhttp3.OkHttpClient;
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, SwipeRefreshLayout.OnRefreshListener{
 
+    // constants
     private static final String TAG = MainActivity.class.getName();
     private static final int PERMISSION_LOCATION = 1;
 
+    // network related stuff
     private GoogleApiClient googleApiClient;
     private OkHttpClient okHttpClient;
     private Location lastLocation;
 
+    // view related stuff
     private WeatherAdapter weatherAdapter;
     private ListView listView;
     private DayForecastClickedListener listener;
@@ -78,6 +82,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         // do preference stuff
         PreferenceManager.setDefaultValues(this, R.xml.preferences_all, false);
+
+        if (BuildConfig.DEBUG) {
+            // log some preferences just to make sure its working
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String temperatureUnits = sharedPreferences.getString("pref_temperature_display_type",
+                    "null");
+            String dayForecast = sharedPreferences.getString("pref_days_in_forecast", "null");
+            Log.d(TAG, "Initial temperature units: " + temperatureUnits);
+            Log.d(TAG, "Initial days: " + dayForecast);
+        }
     }
 
     @Override
@@ -91,13 +105,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d(TAG, "onStart");
         googleApiClient.connect();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d(TAG, "onPause");
         // TODO: save current forecast list in the bundle/preferences
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
     }
 
     @Override
@@ -127,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
                 return true;
             case R.id.action_settings:
-                Intent intent = new Intent(this, SettingsActivity.class);
+                Intent intent = new Intent(this, SinglePageSettingsActivity.class);
                 startActivity(intent);
             default:
                 return super.onOptionsItemSelected(item);

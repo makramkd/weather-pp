@@ -8,6 +8,7 @@
             android:entries="@array/pref_temperature_units_array"
             android:entryValues="@array/pref_temperature_units_array_values"
             android:dialogTitle="@string/pref_select_temperature_units"
+            android:defaultValue="0"
             />
 
         <EditTextPreference

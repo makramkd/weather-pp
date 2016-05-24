@@ -1,6 +1,8 @@
 package me.makram.weatherpp.app;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +36,7 @@ public class WeatherAdapter extends BaseAdapter{
     private List<Day> days;
     private LayoutInflater layoutInflater;
     private ImageLoader imageLoader;
+    private SharedPreferences sharedPreferences;
 
     private class ViewHolder {
         NetworkImageView forecastImageView;
@@ -52,6 +55,7 @@ public class WeatherAdapter extends BaseAdapter{
         this.days.addAll(days);
         layoutInflater = LayoutInflater.from(context);
         imageLoader = loader;
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         Log.d(TAG, "Finished constructing weather adapter");
     }
@@ -93,15 +97,39 @@ public class WeatherAdapter extends BaseAdapter{
 
         Day day = days.get(position);
 
+        // fill out view details
         holder.descriptionTextView.setText(day.description);
-        holder.temperatureTextView.setText(context.getResources().getString(R.string.temperature_textview,
-                (int) day.minTemp, (int) day.maxTemp));
+        // get temperature setting from preferences
+        Integer tempUnits = Integer.parseInt(sharedPreferences.getString(PreferenceConstants.PREF_TEMPERATURE_DISPLAY_TYPE, "-1"));
+        setTemperatureTextView(holder.temperatureTextView, tempUnits, (int) day.minTemp, (int) day.maxTemp);
         holder.cityTextView.setText(context.getResources().getString(R.string.city_textview,
                 day.cityName, day.countryName));
         holder.forecastImageView.setImageUrl(day.getImageUrl(), imageLoader);
         holder.dateTextView.setText(dateRelativeToPosition(position));
 
         return convertView;
+    }
+
+    private void setTemperatureTextView(TextView temperatureTextView, Integer tempUnits, int minTemp,
+                                        int maxTemp) {
+        String symbol = "";
+        switch (tempUnits) {
+            case PreferenceConstants.PREF_VALUE_KELVIN:
+                symbol = "K";
+                break;
+            case PreferenceConstants.PREF_VALUE_CELSIUS:
+                symbol = "\u2103";
+                minTemp = (int) Utils.kelvinToCelsius((double) minTemp);
+                maxTemp = (int) Utils.kelvinToCelsius((double) maxTemp);
+                break;
+            case PreferenceConstants.PREF_VALUE_FAHRENHEIT:
+                symbol = "\u2109";
+                minTemp = (int) Utils.celsiusToFahrenheit(Utils.kelvinToCelsius((double) minTemp));
+                maxTemp = (int) Utils.celsiusToFahrenheit(Utils.kelvinToCelsius((double) maxTemp));
+                break;
+        }
+        temperatureTextView.setText(context.getResources().getString(R.string.temperature_textview,
+               minTemp + symbol, maxTemp + symbol));
     }
 
     private String dateRelativeToPosition(int position) {
