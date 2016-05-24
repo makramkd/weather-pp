@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory android:title="@string/pref_header_general">
+        <ListPreference
+            android:key="pref_temperature_display_type"
+            android:title="@string/pref_temperature_units"
+            android:summary="@string/pref_temperature_display_summary"
+            android:entries="@array/pref_temperature_units_array"
+            android:entryValues="@array/pref_temperature_units_array_values"
+            android:dialogTitle="@string/pref_select_temperature_units"
+            />
+
+        <EditTextPreference
+            android:key="pref_days_in_forecast"
+            android:title="@string/pref_days_in_forecast"
+            android:dialogTitle="@string/pref_set_days_in_forecast"
+            android:numeric="integer"
+            android:defaultValue="7"
+            />
+    </PreferenceCategory>
+</PreferenceScreen>
