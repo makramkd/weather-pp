@@ -6,4 +6,8 @@
         android:id="@+id/action_refresh"
         app:showAsAction="never"/>
 
+    <item android:title="@string/action_settings"
+        android:id="@+id/action_settings"
+        app:showAsAction="never"/>
+
 </menu>

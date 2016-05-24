@@ -1,6 +1,7 @@
 package me.makram.weatherpp.app.tasks;
 
 import android.os.AsyncTask;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
 import java.io.IOException;
@@ -20,10 +21,12 @@ public class GetForecastByCoordinatesTask extends AsyncTask<Double, Void, List<D
 
     private OkHttpClient client;
     private MainActivity mainActivity;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-    public GetForecastByCoordinatesTask(MainActivity activity) {
+    public GetForecastByCoordinatesTask(MainActivity activity, SwipeRefreshLayout swipeRefreshLayout) {
         this.client = activity.getOkHttpClient();
         this.mainActivity = activity;
+        this.swipeRefreshLayout = swipeRefreshLayout;
     }
 
     @Override
@@ -40,6 +43,7 @@ public class GetForecastByCoordinatesTask extends AsyncTask<Double, Void, List<D
 
     @Override
     protected void onPostExecute(List<Day> days) {
+        swipeRefreshLayout.setRefreshing(false);
         if (days != null) {
             mainActivity.populateForecastList(days);
         } else {
@@ -50,5 +54,6 @@ public class GetForecastByCoordinatesTask extends AsyncTask<Double, Void, List<D
     @Override
     protected void onPreExecute() {
         Log.d(TAG, "Fetching forcast via longitude and latitude");
+        swipeRefreshLayout.setRefreshing(true);
     }
 }

@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -34,7 +35,7 @@ import me.makram.weatherpp.app.tasks.GetForecastByCoordinatesTask;
 import okhttp3.OkHttpClient;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener{
+        GoogleApiClient.OnConnectionFailedListener, SwipeRefreshLayout.OnRefreshListener{
 
     private static final String TAG = MainActivity.class.getName();
     private static final int PERMISSION_LOCATION = 1;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private WeatherAdapter weatherAdapter;
     private ListView listView;
     private DayForecastClickedListener listener;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             listView.setAdapter(weatherAdapter);
             listView.setOnItemClickListener(listener);
         }
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -106,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             case R.id.action_refresh:
                 if (networkIsAvailable()) {
                     if (lastLocation != null) {
-                        new GetForecastByCoordinatesTask(this).execute(lastLocation.getLongitude(),
+                        new GetForecastByCoordinatesTask(this, swipeRefreshLayout).execute(lastLocation.getLongitude(),
                                 lastLocation.getLatitude());
                     }
                 } else {
@@ -206,5 +211,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
      */
     public void populateForecastList(List<Day> days) {
         weatherAdapter.setDays(days);
+    }
+
+    @Override
+    public void onRefresh() {
+        if (networkIsAvailable()) {
+            if (lastLocation != null) {
+                new GetForecastByCoordinatesTask(this, swipeRefreshLayout).execute(lastLocation.getLongitude(),
+                        lastLocation.getLatitude());
+            } else {
+                Log.d(TAG, "lastLocation is null");
+            }
+        } else {
+            Toast.makeText(this, "Network is not available: please connect to the internet",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }
