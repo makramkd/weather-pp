@@ -112,9 +112,9 @@ public class WeatherAdapter extends BaseAdapter{
             case 0:
                 return "Today, " + format.format(date);
             case 1:
-                return "Tomorrow, " + format.format(dateTime.plusDays(1));
+                return "Tomorrow, " + format.format(dateTime.plusDays(1).toDate());
             default:
-                return format.format(dateTime.plusDays(position));
+                return format.format(dateTime.plusDays(position).toDate());
         }
     }
 

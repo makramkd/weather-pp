@@ -91,10 +91,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (lastLocation != null) {
-            outState.putDouble("longitude", lastLocation.getLongitude());
-            outState.putDouble("latitude", lastLocation.getLatitude());
-        }
     }
 
     protected void onRestoreInstanceState(Bundle bundle) {
@@ -209,6 +205,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
      * @param days
      */
     public void populateForecastList(List<Day> days) {
-
+        weatherAdapter.setDays(days);
     }
 }

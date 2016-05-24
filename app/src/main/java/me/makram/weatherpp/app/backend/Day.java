@@ -75,6 +75,6 @@ public class Day {
     }
 
     public String getImageUrl() {
-        return IMAGE_URL + icon;
+        return IMAGE_URL + icon + ".png";
     }
 }
