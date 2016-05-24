@@ -3,6 +3,7 @@ package me.makram.weatherpp.app.tasks;
 import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
@@ -46,6 +47,7 @@ public class GetForecastByCoordinatesTask extends AsyncTask<Double, Void, List<D
         swipeRefreshLayout.setRefreshing(false);
         if (days != null) {
             mainActivity.populateForecastList(days);
+            Toast.makeText(mainActivity, "Weather data refreshed!", Toast.LENGTH_SHORT).show();
         } else {
             Log.d(TAG, "Days is null");
         }
