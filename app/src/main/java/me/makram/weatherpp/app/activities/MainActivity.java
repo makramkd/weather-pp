@@ -31,6 +31,7 @@ import java.util.List;
 import me.makram.weatherpp.app.AppController;
 import me.makram.weatherpp.app.BuildConfig;
 import me.makram.weatherpp.app.DayForecastClickedListener;
+import me.makram.weatherpp.app.PreferenceConstants;
 import me.makram.weatherpp.app.R;
 import me.makram.weatherpp.app.WeatherAdapter;
 import me.makram.weatherpp.app.backend.Day;
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private ListView listView;
     private DayForecastClickedListener listener;
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    private int temperatureUnits;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,15 +86,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         // do preference stuff
         PreferenceManager.setDefaultValues(this, R.xml.preferences_all, false);
 
-        if (BuildConfig.DEBUG) {
-            // log some preferences just to make sure its working
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            String temperatureUnits = sharedPreferences.getString("pref_temperature_display_type",
-                    "null");
-            String dayForecast = sharedPreferences.getString("pref_days_in_forecast", "null");
-            Log.d(TAG, "Initial temperature units: " + temperatureUnits);
-            Log.d(TAG, "Initial days: " + dayForecast);
-        }
+        temperatureUnits = Integer.parseInt(PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .getString(PreferenceConstants.PREF_TEMPERATURE_DISPLAY_TYPE, "-1"));
     }
 
     @Override
@@ -120,6 +117,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
+        int tempSetting = Integer.parseInt(PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .getString(PreferenceConstants.PREF_TEMPERATURE_DISPLAY_TYPE, "-1"));
+        if (tempSetting != temperatureUnits) {
+            // refresh the view
+            weatherAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

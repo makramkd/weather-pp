@@ -124,8 +124,8 @@ public class WeatherAdapter extends BaseAdapter{
                 break;
             case PreferenceConstants.PREF_VALUE_FAHRENHEIT:
                 symbol = "\u2109";
-                minTemp = (int) Utils.celsiusToFahrenheit(Utils.kelvinToCelsius((double) minTemp));
-                maxTemp = (int) Utils.celsiusToFahrenheit(Utils.kelvinToCelsius((double) maxTemp));
+                minTemp = (int) Utils.kelvinToFahrenheit((double)minTemp);
+                maxTemp = (int) Utils.kelvinToFahrenheit((double)maxTemp);
                 break;
         }
         temperatureTextView.setText(context.getResources().getString(R.string.temperature_textview,

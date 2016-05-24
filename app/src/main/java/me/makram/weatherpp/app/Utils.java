@@ -16,12 +16,7 @@ public class Utils {
         return kelvin + ABS_ZERO;
     }
 
-    /**
-     * Convert from celsius to fahrenheit.
-     * @param celsius the temperature in celsius.
-     * @return the temperature in fahrenheit
-     */
-    public static double celsiusToFahrenheit(double celsius) {
-        return celsius * (9 / 5) + 32;
+    public static double kelvinToFahrenheit(double kelvin) {
+        return (1.8 * (kelvin + ABS_ZERO)) + 32;
     }
 }
